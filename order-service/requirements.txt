@@ -1,0 +1,4 @@
+alembic
+python-dotenv
+sqlalchemy
+psycopg2
