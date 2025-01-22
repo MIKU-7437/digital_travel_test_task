@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent  # 3 уровня вв�
 sys.path.insert(0, str(BASE_DIR))
 config = context.config
 
-from database.orm_models import Base
+from order_service.app.infrastructure.database.models import Base
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

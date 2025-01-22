@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.domain.models.product import Product as DomainProduct
 from app.domain.repositories.product_repository import IProductRepository
-from app.infrastructure.database.orm_models import Order as OrderORM, Product as ProductORM, OrderProduct
+from order_service.app.infrastructure.database.models import Order as OrderORM, Product as ProductORM, OrderProduct
 
 
 class ProductRepositoryImpl(IProductRepository):
