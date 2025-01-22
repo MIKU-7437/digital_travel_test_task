@@ -3,3 +3,5 @@ python-dotenv
 sqlalchemy
 psycopg2
 asyncpg
+pydantic
+pydantic_settings

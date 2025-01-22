@@ -45,13 +45,12 @@ class Product(Base):
 
 class OrderProduct(Base):
     """
-    Ассоциативная таблица (order_products) для связи "многие ко многим" между 
+    Ассоциативная таблица (order_products) для связи "многие ко многим" между
     Order и Product, где можно хранить количество (quantity) в конкретном заказе.
     """
     __tablename__ = "order_products"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    
     order_id = Column(UUID(as_uuid=True), ForeignKey("orders.order_id"), nullable=False)
     product_id = Column(UUID(as_uuid=True), ForeignKey("products.product_id"), nullable=False)
     quantity = Column(Integer, default=1, nullable=False)

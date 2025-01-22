@@ -15,7 +15,7 @@ class Product:
     @staticmethod
     def create(name: str, price: float, quantity: int) -> "Product":
         """
-        A method for creating a new product
+        A fabric method for creating a new product
         with product_id generation.
         """
         return Product(
