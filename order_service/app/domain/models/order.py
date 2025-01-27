@@ -10,9 +10,9 @@ class OrderStatus(str, Enum):
     """
     Possible order statuses
     """
-    PENDING = "pending"
-    CONFIRMED = "confirmed"
-    CANCELLED = "cancelled"
+    PENDING = "PENDING"
+    CONFIRMED = "CONFIRMED"
+    CANCELLED = "CANCELLED"
 
 @dataclass
 class Order:

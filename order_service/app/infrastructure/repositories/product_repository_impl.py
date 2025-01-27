@@ -1,6 +1,8 @@
 from typing import Optional, List
 from uuid import UUID
+from sqlalchemy.future import select
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.domain.models.product import Product as DomainProduct
 from app.domain.repositories.product_repository import IProductRepository
@@ -8,20 +10,20 @@ from app.infrastructure.database.orm_models import Order as OrderORM, Product as
 
 
 class ProductRepositoryImpl(IProductRepository):
-    def __init__(self, session: Session):
+    def __init__(self, session: Session|AsyncSession):
         self.session = session
 
-    def add(self, product: DomainProduct) -> None:
+    async def add(self, product: DomainProduct) -> None:
         orm_product = ProductORM(
             product_id=product.product_id,
             name=product.name,
             price=product.price,
             quantity=product.quantity,
         )
-        self.session.add(orm_product)
+        await self.session.add(orm_product)
 
-    def get_by_id(self, product_id: int) -> Optional[ProductORM]:
-        orm_product = self.session.query(ProductORM).filter_by(product_id=product_id).first()
+    async def get_by_id(self, product_id: int) -> Optional[ProductORM]:
+        orm_product = await self.session.query(ProductORM).filter_by(product_id=product_id).first()
         if orm_product is None:
             return None
 
@@ -32,8 +34,9 @@ class ProductRepositoryImpl(IProductRepository):
             quantity=orm_product.quantity,
         )
 
-    def list_all(self) -> List[DomainProduct]:
-        orm_products = self.session.query(ProductORM).all()
+    async def list_all(self) -> List[DomainProduct]:
+        result = await self.session.execute(select(ProductORM))
+        orm_products = result.scalars().all()
         products: List[DomainProduct] = []
 
         for orm_product in orm_products:
@@ -45,8 +48,8 @@ class ProductRepositoryImpl(IProductRepository):
             ))
         return products
 
-    def update(self, product: DomainProduct) -> None:
-        orm_product = self.session.query(ProductORM).filter_by(product_id=product.product_id).first()
+    async def update(self, product: DomainProduct) -> None:
+        orm_product = await self.session.query(ProductORM).filter_by(product_id=product.product_id).first()
         if orm_product is None:
             return None
 
@@ -54,7 +57,7 @@ class ProductRepositoryImpl(IProductRepository):
         orm_product.price = product.price
         orm_product.quantity = product.quantity
 
-    def delete(self, product_id: UUID) -> None:
-        orm_product = self.session.query(ProductORM).filter_by(product_id=product_id).first()
+    async def delete(self, product_id: UUID) -> None:
+        orm_product = await self.session.query(ProductORM).filter_by(product_id=product_id).first()
         if orm_product:
-            self.session.delete(orm_product)
+            await self.session.delete(orm_product)

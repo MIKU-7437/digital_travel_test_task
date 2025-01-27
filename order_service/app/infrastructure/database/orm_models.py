@@ -10,9 +10,9 @@ Base = declarative_base()
 
 
 class OrderStatus(PyEnum):
-    PENDING = "pending"
-    CONFIRMED = "confirmed"
-    CANCELLED = "cancelled"
+    PENDING = "PENDING"
+    CONFIRMED = "CONFIRMED"
+    CANCELLED = "CANCELLED"
 
 
 class Order(Base):
