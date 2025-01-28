@@ -2,7 +2,7 @@ from enum import Enum as PyEnum
 from uuid import uuid4
 
 from sqlalchemy import (Boolean, Column, Enum, Float, ForeignKey, Integer,
-                        String)
+                        String, text)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import declarative_base, relationship
 
@@ -22,7 +22,7 @@ class Order(Base):
     """
     __tablename__ = "orders"
 
-    order_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    order_id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()"))
     customer_name = Column(String, nullable=False)
     status = Column(Enum(OrderStatus), default=OrderStatus.PENDING, nullable=False)
     total_price = Column(Float, default=0, nullable=False)
@@ -37,7 +37,7 @@ class Product(Base):
     """
     __tablename__ = "products"
 
-    product_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    product_id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()"))
     name = Column(String, nullable=False)
     price = Column(Float, default=0, nullable=False)
     quantity = Column(Integer, default=1, nullable=False)
@@ -50,7 +50,7 @@ class OrderProduct(Base):
     """
     __tablename__ = "order_products"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()"))
     order_id = Column(UUID(as_uuid=True), ForeignKey("orders.order_id"), nullable=False)
     product_id = Column(UUID(as_uuid=True), ForeignKey("products.product_id"), nullable=False)
     quantity = Column(Integer, default=1, nullable=False)

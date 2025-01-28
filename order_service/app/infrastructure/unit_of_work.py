@@ -5,6 +5,7 @@ from app.application.unit_of_work import IUnitOfWork
 from app.infrastructure.database.db_connection import session_factory
 from app.infrastructure.repositories.order_repository_impl import OrderRepositoryImpl
 from app.infrastructure.repositories.product_repository_impl import ProductRepositoryImpl
+from app.infrastructure.repositories.order_product_repository import OrderProductRepository
 
 class SqlAlchemyUnitOfWork(IUnitOfWork):
     def __init__(self, session_factory: async_sessionmaker[AsyncSession]):
@@ -12,11 +13,13 @@ class SqlAlchemyUnitOfWork(IUnitOfWork):
         self.session: AsyncSession | None = None
         self.order_repository: OrderRepositoryImpl | None = None
         self.product_repository: ProductRepositoryImpl | None = None
+        self.order_product_repository: OrderProductRepository | None = None
 
     async def __aenter__(self) -> "SqlAlchemyUnitOfWork":
         self.session = self.session_factory()
         self.order_repository = OrderRepositoryImpl(self.session)
         self.product_repository = ProductRepositoryImpl(self.session)
+        self.order_product_repository = OrderProductRepository(self.session)
         return self
 
     def __enter__(self) -> "SqlAlchemyUnitOfWork":

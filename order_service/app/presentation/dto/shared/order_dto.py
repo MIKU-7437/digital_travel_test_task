@@ -4,24 +4,13 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field
 
-from .product_dto import ProductCreateDTO, ProductDTO
+from app.presentation.dto.shared.product_dto import  ProductDTO
 
 
 class OrderStatus(str, Enum):
     PENDING = "PENDING"
     CONFIRMED = "CONFIRMED"
     CANCELLED = "CANCELLED"
-
-
-class OrderCreateDTO(BaseModel):
-    customer_name: str = Field(..., example="Иван Петров")
-    products: List[ProductCreateDTO] = Field(
-        ...,
-        example=[
-            {"name": "Смартфон", "price": 500.0, "quantity": 2},
-            {"name": "Наушники", "price": 50.0, "quantity": 1}
-        ]
-    )
 
 
 class OrderDTO(BaseModel):

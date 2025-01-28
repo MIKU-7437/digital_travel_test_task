@@ -27,14 +27,14 @@ class Order:
     is_deleted: bool = False  # для мягкого удаления, если нужно
 
     @staticmethod
-    def create(customer_name: str, products: List[Product]) -> "Order":
+    def create(customer_name: str, products: List[Product], order_id:UUID = uuid4(), ) -> "Order":
         """
         A method for creating a new order
         calculates total_price by lust of Products
         """
         total = sum(p.price * p.quantity for p in products)
         return Order(
-            order_id=uuid4(),
+            order_id=order_id,
             customer_name=customer_name,
             status=OrderStatus.PENDING,
             total_price=total,

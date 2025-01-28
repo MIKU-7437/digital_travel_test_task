@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, Body
-from app.presentation.dto.order_dto import OrderCreateDTO, OrderDTO
-from app.presentation.dto.product_dto import ProductDTO
+
+from app.presentation.dto.requests.order_request_dto import  OrderCreateRequest
+from app.presentation.dto.shared.product_dto import ProductDTO
+from app.presentation.dto.shared.order_dto import OrderDTO
 from app.application.use_cases.create_order_use_case import CreateOrderUseCase
 from app.infrastructure.unit_of_work import SqlAlchemyUnitOfWork
 from app.infrastructure.database.db_connection import session_factory
@@ -14,10 +16,9 @@ async def get_uow():
         yield uow
 
 @router.post("/", response_model=OrderDTO)
-def create_order(dto: OrderCreateDTO = Body(..., media_type="application/json"), uow: SqlAlchemyUnitOfWork = Depends(get_uow)):
+def create_order(dto: OrderCreateRequest = Body(..., media_type="application/json"), uow: SqlAlchemyUnitOfWork = Depends(get_uow)):
     use_case = CreateOrderUseCase(order_repository=uow.order_repository)
     order = use_case.execute(customer_name=dto.customer_name, products_data=dto.products)
-    print(order)
     return OrderDTO(
         order_id=order.order_id,
         customer_name=order.customer_name,

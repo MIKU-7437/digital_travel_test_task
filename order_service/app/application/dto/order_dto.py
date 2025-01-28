@@ -20,3 +20,8 @@ class OrderDTO(BaseModel):
     total_price: float = Field(..., example=1100.0)
     products: List[ProductDTO] = Field(..., example=[])
     is_deleted: bool = Field(False, example=False)
+
+
+class OrderCreateDTO(BaseModel):
+    customer_name: str = Field(..., example="Иван Петров")
+    products: List[UUID]

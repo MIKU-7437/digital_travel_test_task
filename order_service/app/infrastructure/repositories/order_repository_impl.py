@@ -10,26 +10,7 @@ class OrderRepositoryImpl(IOrderRepository):
     def __init__(self, session: Session):
         self.session = session
 
-    def add(self, order: DomainOrder) -> None:
-        # Маппинг доменного заказа в ORM‑модель
-        orm_order = OrderORM(
-            order_id=order.order_id,
-            customer_name=order.customer_name,
-            status=order.status.value,
-            total_price=order.total_price,
-            is_deleted=order.is_deleted
-        )
-        # Если в домене order.products хранится список продуктов,
-        # вы можете добавить связывающие записи в order_products.
-        for prod in order.products:
-            # Предполагаем, что продукт уже существует в базе,
-            # либо его нужно создать отдельно
-            order_product = OrderProduct(
-                order_id=order.order_id,
-                product_id=prod.product_id,
-                quantity=prod.quantity
-            )
-            orm_order.order_products.append(order_product)
+    def add(self, orm_order: OrderORM) -> None:
         self.session.add(orm_order)
 
     def get_by_id(self, order_id: UUID) -> Optional[DomainOrder]:

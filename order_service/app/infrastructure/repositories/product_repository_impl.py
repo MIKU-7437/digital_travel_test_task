@@ -61,3 +61,19 @@ class ProductRepositoryImpl(IProductRepository):
         orm_product = await self.session.query(ProductORM).filter_by(product_id=product_id).first()
         if orm_product:
             await self.session.delete(orm_product)
+
+    async def get_by_ids(self, product_ids: List[int]) -> List[DomainProduct]:
+        result = await self.session.execute(
+            select(ProductORM).where(ProductORM.product_id.in_(product_ids))
+        )
+        orm_products = result.scalars().all()
+
+        return [
+            DomainProduct(
+                product_id=orm_product.product_id,
+                name=orm_product.name,
+                price=orm_product.price,
+                quantity=orm_product.quantity,
+            )
+            for orm_product in orm_products
+        ]
